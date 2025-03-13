@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-customBg text-white min-h-screen w-full overflow-hidden;
+}
+
+.filter-optimized {
+  will-change: filter;
+}
