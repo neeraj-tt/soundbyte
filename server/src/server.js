@@ -32,12 +32,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  res.send("✅ Server is running!");
+  res.send("Server is running!");
 });
 
 app.get("/login", (req, res) => {
   const state = generateRandomString(16);
-  res.cookie(stateKey, state);
+  res.cookie(stateKey, state, { httpOnly: true, secure: true, sameSite: 'none' });
 
   const scope = encodeURIComponent(
     "user-read-private user-read-email user-library-read"
