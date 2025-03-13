@@ -37,11 +37,10 @@ app.get("/", (req, res) => {
 
 app.get("/login", (req, res) => {
   const state = generateRandomString(16);
-  res.cookie(stateKey, state, { httpOnly: true, secure: true, sameSite: 'none' });
+  res.cookie(stateKey, state, { httpOnly: true, secure: true, sameSite: "none" });
 
-  const scope = encodeURIComponent(
-    "user-read-private user-read-email user-library-read"
-  );
+  const scope = "user-read-private user-read-email user-library-read"
+
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -108,7 +107,7 @@ app.get("/callback", async (req, res) => {
       error.response?.data || error
     );
     res.redirect(
-      "/#" +
+      client_url + "/#" +
         querystring.stringify({
           error: "invalid_token",
         })
