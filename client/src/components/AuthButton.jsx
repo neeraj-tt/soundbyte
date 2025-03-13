@@ -1,5 +1,5 @@
 export default function AuthButton({ isAuthenticated }) {
-  const backendUrl = "http://localhost:8888";
+  const backendUrl = "https://soundbyte-backend-2481cb7d0b5f.herokuapp.com";
 
   const handleLogin = () => {
     window.location.href = `${backendUrl}/login`;

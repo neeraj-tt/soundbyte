@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useSpotifyAuth } from "./useSpotifyAuth";
 import spotifyApi from "../utils/spotifyApi";
 
+const API_URL = "https://soundbyte-backend-2481cb7d0b5f.herokuapp.com";
+
 export function useSpotifyData() {
   const { spotifyToken, refreshAccessToken } = useSpotifyAuth();
   const [songs, setSongs] = useState({});
@@ -15,29 +17,29 @@ export function useSpotifyData() {
   const fetchSongs = async () => {
     const expirationTime = localStorage.getItem("spotify_token_expiration");
     if (expirationTime && Date.now() > expirationTime) {
-      console.warn("🔄 Token expired, refreshing before fetching songs...");
+      console.warn("Token expired, refreshing before fetching songs...");
       await refreshAccessToken();
     }
 
     try {
       const response = await spotifyApi.getMySavedTracks({ limit: 1 });
-      if (response && response.total) {
+      if (response?.total) {
         setSongs({ quantity: response.total });
       }
     } catch (error) {
-      console.error("❌ Error fetching liked songs:", error);
+      console.error("Error fetching liked songs:", error);
     }
   };
 
   const getRandomSong = async () => {
-    let attempts = 0;
     const maxAttempts = 5;
+    let attempts = 0;
 
     const expirationTime = parseInt(
       localStorage.getItem("spotify_token_expiration")
     );
     if (expirationTime && Date.now() > expirationTime) {
-      console.warn("🔄 Token expired, refreshing before fetching song...");
+      console.warn("Token expired, refreshing before fetching song...");
       await refreshAccessToken();
     }
 
@@ -49,11 +51,8 @@ export function useSpotifyData() {
         const response = await spotifyApi.getMySavedTracks({ limit: 1 });
         const totalLikedSongs = response.total;
 
-        if (totalLikedSongs === 0) {
-          return null;
-        }
+        if (totalLikedSongs === 0) return null;
 
-        //should probably have a list of last 10 or so songs to avoid repetition
         const randomIndex = Math.floor(Math.random() * totalLikedSongs);
         const songResponse = await spotifyApi.getMySavedTracks({
           limit: 1,
@@ -90,13 +89,13 @@ export function useSpotifyData() {
           }
         }
       } catch (err) {
-        console.warn("❌ Error fetching random song:", err);
+        console.warn("Error fetching random song:", err);
         return null;
       }
       attempts++;
     }
 
-    console.error("❌ Max retries reached. No preview found.");
+    console.error("Max retries reached. No preview found.");
     return null;
   };
 
@@ -106,35 +105,24 @@ export function useSpotifyData() {
     isAlbum = false,
     albumName = ""
   ) => {
-    //getting rid of (feat. XXX) types
     const trackNameStripped = trackName
       .replace(/\s*[\(\[].*?[\)\]]\s*/g, "")
       .trim();
-    try {
-      // need to remove special letters, e.g. Callin më - Yeat - Up 2 Më does not work
-      // only query album if it actually is an album
-      let response;
-      if (isAlbum) {
-        response = await fetch(
-          `http://localhost:8888/deezer-search?query=${encodeURIComponent(`track:"${trackName}" artist:"${artist}" album:"${albumName}"&strict=on`)}`
-        );
-      } else {
-        response = await fetch(
-          `http://localhost:8888/deezer-search?query=${encodeURIComponent(`track:"${trackName}" artist:"${artist}"&strict=on`)}`
-        );
-      }
 
+    try {
+      let query =
+        isAlbum && albumName
+          ? `track:"${trackNameStripped}" artist:"${artist}" album:"${albumName}"&strict=on`
+          : `track:"${trackNameStripped}" artist:"${artist}"&strict=on`;
+
+      const response = await fetch(
+        `${API_URL}/deezer-search?query=${encodeURIComponent(query)}`
+      );
       const data = await response.json();
 
-      if (data?.data && Array.isArray(data.data) && data.data.length > 0) {
-        const previewUrl = data.data[0].preview; // This is the 30-sec MP3 preview
-        return previewUrl;
-      } else {
-        console.error("No preview found on Deezer. Data:", data);
-        return null;
-      }
+      return data?.data?.[0]?.preview || null;
     } catch (error) {
-      console.error("❌ Error fetching preview from Deezer:", error);
+      console.error("Error fetching preview from Deezer:", error);
       return null;
     }
   };
