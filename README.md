@@ -1,4 +1,4 @@
-soundbyte is a guessing game uses your liked songs on Spotify. It plays one second of a random song, and you have to guess what it is.
+soundbyte is a guessing game that uses your liked songs on Spotify. It plays one second of a random song, and you have to guess what it is.
 
 Visit at https://thesoundbyte.vercel.app
 
