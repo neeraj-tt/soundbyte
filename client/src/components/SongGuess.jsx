@@ -27,7 +27,7 @@ const SongGuess = ({ onGuess, disabled, guessOutcome }) => {
         value={userGuess}
         onChange={disabled ? undefined : handleInputChange}
         onKeyDown={disabled ? undefined : handleKeyDown}
-        placeholder="Guess song name..."
+        placeholder="Enter song name..."
         className={`w-52 p-3 border rounded-lg bg-gray-800 text-white focus:outline-none transition-colors duration-500 ${
           guessOutcome === "default" ? "border-green-500" : "border-red-500"
         }`}

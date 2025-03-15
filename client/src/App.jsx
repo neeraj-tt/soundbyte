@@ -23,8 +23,8 @@ function App() {
           <h1 className="font-kanit pb-2 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
             soundbyte
           </h1>
-          <h2 className="text-[clamp(1rem, 3vw, 1.5rem)]">
-            A guessing game based on your personal music taste
+          <h2 className="text-md sm:text-sm md:text-sm lg:text-md xl:text-md max-w-xs sm:max-w-md md:max-w-lg mx-auto">
+            Based on your personal music taste
           </h2>
           <AuthButton isAuthenticated={loggedIn} />
         </div>
