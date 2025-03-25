@@ -1,6 +1,7 @@
+# soundbyte 
 soundbyte is a guessing game that uses your liked songs on Spotify. It plays one second of a random song, and you have to guess what it is.
 
-Visit at thesoundbyte.vercel.app (must be whitelisted due to Spotify API limits)
+Visit [here](https://thesoundbyte.vercel.app) (must be whitelisted due to Spotify API limits)
 
 ![image](https://github.com/user-attachments/assets/4d35fd29-e87b-46cd-81e5-c04e82e4ff4b)
 
